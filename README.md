@@ -18,7 +18,8 @@
   上面的东西配置好之后在创建的cc/cpp文件中输入 header + Enter 就会自动在这个地方添加 上面的body.
   
   之后再设置相应的快捷键即可,如果题目为英文,设置当前用户的setting.json中的  "leetcode.useEndpointTranslation": true 显示题目为中文.
-  具体的setting.json文件内如如下:
+  
+  本人具体的setting.json文件内如如下:
   
     "leetcode.nodePath": "/usr/local/lib/node/nodejs/bin/node",
     "leetcode.defaultLanguage": "cpp",
