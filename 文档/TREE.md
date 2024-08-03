@@ -56,7 +56,7 @@ vector<int> postOrder(Node *root) {
         if (p->right != nullptr && p->right != pre) {
             p = p->right;           // 右
         } else {
-            p = st.top(), st.pop();
+            st.pop();
             res.push_back(p->val);  // 中
             pre = p;
             p = nullptr;
@@ -179,3 +179,58 @@ HuffmanNode *buildHuffmanTree(std::priority_queue<HuffmanNode*> &pq) {
 1. 对于操作数,生成数节点,push到栈中
 2. 对于操作符,生成符节点,从栈中弹出两个,分作作为当前符节点的右,左孩子,将符节点push到栈中
 3. 最后栈中只剩下一个节点,即为根节点
+
+**并查集**
+
+经常需要的两种操作
+1. 查询某个元素所属的集合
+2. 合并两个集合
+- 并查集的一种高效实现方式是使用树表示集合,只需要树的向上访问能力,只需要存储父节点信息
+- 使用Father数组表示集合 Father[i]:节点i的父节点下标
+```cpp
+void make_set(int x) {
+    // 单节点
+    Father[x] = 0;
+}
+// O(N)
+int find(int x) {
+    // 永远都不会返回0
+    if (Father[x] == 0) return x;
+    return find(Father[x]);
+}
+// O(N)
+void union(int x, int y) {
+    // x的父亲指向y的父亲
+    Father[find(y)] = find(x);
+}
+```
+- find和union操作时间复杂度取决于树的高度
+
+对并查集的优化(每个操作均摊时间复杂度近似为O(1))
+1. 路径压缩
+- 在find(x)操作中,找到元素x所在树的根fx之后,将x到根fx路径上所有节点的父亲都改为fx
+```cpp
+int find(x) {
+    if (Father[x] <= 0) return x;
+    Father[x] = find(Father[x]);
+    return Father[x];
+}
+```
+2. 按秩合并
+- 每个节点维护一个秩,表示以该节点为根的子树的高度的上界
+- Father[x] > 0:表示x父节点的地址
+- Father[x] <= 0:表示x是根,Father[x]值为x秩的相反数
+- 合并操作:具有较小秩的根指向具有较大秩的根
+```cpp
+void union(int x, int y) {
+    int fx = find(x), fy = find(y);
+    if (fx == fy) return;
+    if (Father[fx] < Father[fy]) // fy的秩小,存放的是相反数
+        Father[fy] = fx;         // fx的秩大,加入fy不会改变原来的秩
+    else {
+        Father[fx] = fy;
+        if (Father[fx] == Father[fy]) 
+            Father[fy]--;       // fy的秩大,如果两个秩一样大,fy再大一个
+    }
+}
+```
