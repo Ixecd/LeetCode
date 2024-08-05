@@ -336,3 +336,187 @@ void ActivityStartTime(Vertex *Head, int n, int ve[], int vl[]) {
                 std::cout << i << "->" << j << std::endl;
         }
 }
+```
+## 图的最短路径
+
+**无权图最短路径**
+- BFS过程中,当访问某个顶点的时候,就确定了该点与源点的最短路径
+```cpp
+// dist[i]:从源点到顶点i的最短路径,初值-1
+// path[i]:从源点到顶点i的最短路径上,顶点i的前驱顶点,初值-1
+void BFS(Vertex *Head, int n, int s, int dist[], int path[]) {
+    std::queue<int> que;
+    for (int i = 0; i < n; ++i) {
+        path[i] = -1;
+        dist[i] = -1;
+    }
+    dist[s] = 0;
+    que.push(s);
+    while (!que.empty()) {
+        int v = que.pop();
+        for (Edge *p = Head[v].adjacent; p; p = p->next) {
+            int w = p->verAdj;
+            if (dist[w] == -1) {
+                dist[w] = v +1
+                path[w] = v;
+                que.push(w);
+            }
+        }
+    }
+}
+```
+**Dijkstra算法**
+- 为了解决带权图的中,长度更长的反而更小
+- Cpp中表示+∞的方法
+    1. INT_MAX: 1 << 31 - 1, 需要 limits.h, 且对于int类型加法,乘法会溢出,不推荐
+    2. 0x3f3f3f3f: 1061109567, 10多亿,一般不会溢出,推荐使用
+```cpp
+// dist[i]: 从源点s到顶点i的最短距离,初始时dist[s] = 0, dist[i] = ∞
+// path[i]: s到i最短路径上i的前驱顶点编号,初始时path[i] = -1
+// S[i]: 顶点i是否在集合S中
+const int INF = 0x3f3f3f3f, N = 1e5 + 10;
+void Dijkstra(Vertex *Head, int n, int s, int dist[], int path[]) {
+    int S[N], i, j, min, v, w;
+    for (int i = 0; i < n; ++i) 
+        path[i] = -1, dist[i] = INF, S[i] = 0;
+    dist[s] = 0;
+    for (i = 0; i < n; ++i) {
+        min = INF;
+        // 从不在S集合中的顶点中选D值最小的顶点v,第一次的话就会找到s
+        for (j = 0; j < n; ++j) 
+            if (S[j] == 0 && dist[j] < min) {
+                min = dist[j];
+                v = j;
+            }
+            // 把v放入S
+            S[v] = 1;
+            for (Edge *p = Head[v].adjacent; p; p = p->next) {
+                w = p->verAdj;
+                // 更新v的邻接顶点的值
+                if (S[w] == 0 && dist[v] + p->cost < dist[w]) {
+                    dist[w] = dist[v] + p->cost;
+                    path[w] = v;
+                }
+            }
+    }
+}
+```
+- 打印路径
+```cpp
+void PrintPath(int start, int end) {
+    if (start == end) {
+        std::cout << start << ' ';
+        return;
+    }
+    PrintPath(s, path[end]);
+    std::cout << end << ' ';
+}
+```
+
+**Floyd算法**
+- G是带权图,对每一对顶点vi!=vj,求vi与vj之间的最短路径
+    1. 若权值为正,可依此把每个顶点作为源点,执行Dijkstra算法
+    2. Floyd算法(使用邻接矩阵存储图)
+```cpp
+// D[i][j]:从顶点i到顶点j的最短距离,初值等于邻接矩阵
+// path[i][j]:i到j最短路径上i的下一个顶点编号
+// A[][]:邻接矩阵
+void Floyd(int A[N][N], int n, int D[N][N], int path[N][N]) {
+    for (int i = 0; i < n; ++i) 
+        for (int j = 0; j < n; ++j) {
+            D[i][j] = A[i][j];
+            if (i != j && A[i][j] < 0x3f3f3f3f) path[i][j] = j;
+            else path[i][j] = -1;
+        }
+    // 三层for大法
+    for (int k = 0; k < n; ++k) 
+        for (int i = 0; i < n; ++i) 
+            for (int j = 0; j < n; ++j) 
+                if (D[i][k] + D[k][j] < D[i][j]) {
+                    D[i][j] = D[i][k] + D[k][j];
+                    path[i][j] = path[i][k];
+                }
+}
+```
+- 打印路径
+```cpp
+void PrintPath(int start, int end) {
+    std::cout << start << ' ';
+    int k = start;
+    while (k != end) {
+        std::cout << path[k][end];
+        k = path[k][end];
+    }
+}
+```
+
+## 图的最小支撑树及图应用
+*最小支撑树*
+- 无向带权连通图G,其顶点个数为n,由G中n个顶点和n-1条边构成的连通子图,称为G的一颗支撑树,亦称生成树
+- 边权之和最小的支撑树称为G的最小支撑树
+- 应用场景:在n个地点之间建立造价最低的网路
+
+**Prim算法(O(N^2))**
+- 假设图使用邻接矩阵存储,结果存储在数组TE中
+- TE[]是最小支撑树的边集合,每个数组元素TE[i]表示一条边,TE[i]由head/tail/cost三个域构成,分别存放在边的两个端点和权值
+```cpp
+struct Edge {
+    int head, tail;
+    int cost;
+};
+Edge TE[1000];
+```
+- 算法实现
+```cpp
+int Prim(int A[N][N], int n, Edge TE[]) { // 以0为起点构造MST
+    int Lowcost[N], U[N], ans = 0;
+    for (int i = 0; i < n; ++i) {
+        Lowcost[i] = A[0][i];
+        U[i] = 0;
+    }
+    U[0] = -1; // 以0为起点构造MST
+    for (int i = 0; i < n - 1; ++i) { // 找n-1条边,循环n-1次
+        int v = 0, min = INF;
+        for (int j = 0; j < n; ++j) {
+            if (U[j] != -1 && Lowcost[j] < min) {
+                v = j;
+                min = Lowcost[j];
+            }
+        }
+        if (v == 0) return 0x3f3f3f3f; // 不存在跨边,不连通
+        TE[i].head = U[v];
+        TE[i].tail = v;
+        TE[i].cost = Lowcost[v];
+        ans += Lowcost[v];
+        U[v] = -1;
+        // 更新v在V-U中的邻接顶点的Lowcost和U值
+        for (int j = 0; j < n; ++j) {
+            if (U[j] != -1 && A[v][j] < Lowcost[j]) {
+                Lowcost[j] = A[v][j];
+                U[j] = v;
+            }
+        }
+    }
+    return ans;
+}
+```
+**Kruskal算法(O(eLge))**
+- 借助并查集,每个连通分量看作一个集合,顶点看作集合元素
+```cpp
+int  Kruskal(Edge E[], int n, int e, Edge TE[]) {
+    for (int i = 0; i < n ++i) Make_set(i);
+    sort(E, e); // 按权值递增排序,时间复杂度为O(eloge)
+    int ans = 0, k = 0; // k是MST中边的计数器
+    for (int i = 0; i < e; ++i) {
+        if (k == n - 1) return ans;
+        int u = E[i].head, v = E[i].tail, w = E[i].cost;
+        if (Find(u) != Find(v)) {
+            TE[k].head = u, TE[k].tail = v, TE[k].cost = w;
+            ++k;
+            ans += w;
+            Union(u, v);
+        }
+    }
+    return INF;
+}
+```
