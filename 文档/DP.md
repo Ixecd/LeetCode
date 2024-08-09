@@ -227,3 +227,133 @@ void Zero_One(vector<int> &weight, vector<int> &value, int cap) {
 
 ## 完全背包
 - 和0-1的区别在于这个物品可以无限次取用,求最大价值
+- 在0-1背包问题中,每个物品只有一个,因此将物品i放入背包后,只能从前i - 1个物品中选择
+- 在完全背包问题中,每个物品是无限个,因此将物品i放入背包后,仍然可以从前i个物品中选择
+    1. 不放入物品i dp[i, c] = dp[i - 1, c]
+    2. 放入物品i dp[i, c] = dp[i, c - weight[i]] + value[i], dp[i]
+    ```cpp
+    int unboundedKnapsackDPComp(vector<int> &wgt, vector<int> &val, int cap) {
+        int n = wgt.size();
+        vector<int> dp(cap + 1, 0);
+        for (int i = 1; i <= n; ++i) {
+            for (int c = 1; c <= cap; ++c) 
+                if (wgt[i - 1] > c) continue;
+                else dp[c] = max(dp[c], dp[c - wgt[i - 1] + val[i - 1]]);
+        }
+        return dp[cap];
+    }
+    ```
+
+**零钱兑换(Tencent CDG-金融科技一面)**
+- Q. 给定n个硬币,第i中硬币的面值为coins[i - 1],目标金额为amt,每种硬币可以重复选取,问能够凑出目标金额的最少硬币数量.如果无法凑出目标金额,返回-1
+- E. coins : [1, 2, 5], target : 11, res : 3
+1. 思考每轮的决策,定义状态,从而得到dp表
+    - [i, a]对应的子问题为:**前i种硬币能够凑出金额a的最少硬币数量**,记为dp[i, a]
+2. 找出最优子结构,进而推导出状态转移方程
+    - 本体求最小值,因此将运算符max()更改为min()
+    - 优化主体是硬币数量而非商品价值,因此在选中硬币时执行+1即可
+3. 确定边界条件和状态转移顺序
+    - 当金额为0时,凑出它的最少硬币数量为0,dp[i, 0] 都为0
+    - 当无硬币时,,为了使得状态转方程中的min能够识别并过滤掉无效解,使用0x3f3f3f3f来表示无穷大,dp[0, c] = 0x3f3f3f3f
+    ```cpp
+    int charge(vector<int> const& coins, int target) {
+        int n = coins.size();
+        vector<vector<int>> dp(n + 1, vector<int>(target + 1, 0));
+        for (int j = 0; j <= target; ++j) 
+            dp[0][j] = 0x3f3f3f3f;
+        for (int i = 1; i <= n; ++i) {
+            for (int c = 1; c <= target; ++c) {
+                if (c - coins[i - 1] >= 0) 
+                    dp[i][c] = min(dp[i - 1][c], dp[i][c - coins[i - 1]] + 1);
+            }
+        }
+        return dp[n][target];
+    }
+    ```
+4. 空间优化(一般侧重点都在背包大小上, 此时很容易遗漏dp数组初始化)
+    ```cpp
+    int charge(vector<int> const& coins, int target) {
+        int n = coins.size();
+        vector<int> dp(target + 1, 0x3f3f3f3f);
+        dp[0] = 0; // 重要
+        for (int i = 1; i <= n; ++i) 
+            for (int c = 1; c <= target; ++c) {
+                if (c - coins[i - 1] >= 0) 
+                    dp[c] = min(dp[c], dp[c - coins[i - 1]] + 1);
+            }
+        return dp[target] == 0x3f3f3f3f ? -1 : dp[target];
+    }
+    ```
+**零钱兑换II**
+- Q. 给定$n$种硬币,第i种硬币的面值为coins[i - 1],目标金额为target,每种硬币可以重复选取,求凑出目标金额硬币组合的数量
+    ```cpp
+    int charge2(vector<int> const& coins, int target) {
+        int n = coins.size();
+        vector<vector<int>> dp(n + 1, vector<int>(target + 1, 0));
+        // 初始化dp
+        for (int i = 0; i <= n; ++i) 
+            dp[i][0] = 1; // 注意:当金额为0时,组合数量为1
+        for (int j = 0; j <= target; ++j) 
+            dp[0][j] = 0; // 当硬币数量为0时,组合数量为0
+
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= target; ++j) {
+                if (j - coins[i - 1] >= 0) 
+                    // 不选和选i这两种方案之和
+                    dp[i][j] = dp[i - 1][j] + dp[i][j - coins[i - 1]]
+                else dp[i][j] = dp[i - 1][j];
+            }
+        }
+        return dp[n][target];
+    }
+    ```
+- 空间优化
+    ```cpp
+    int charge2(vector<int> const& coins, int target) {
+        int n = coins.size();
+        vector<int> dp(target + 1, 0);
+        dp[0] = 1;
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= target; ++j) {
+                if (j - coins[i - 1] >= 0) 
+                    dp[j] = dp[j] + dp[j - coins[i - 1]];
+                else dp[j] = dp[j];
+            }
+        }
+        return dp[target];
+    }
+    ```
+**完全背包总结**
+- 两层for循环,外层遍历物品,内层遍历背包,都是从左往右遍历,为了方便理解,dp数组的大小都扩大1
+- 递归公式为 (前者表示不选,后者表示选,i->物品,j->背包)
+    1. dp[i][j] = min(dp[i - 1][j], dp[i][j - coins[i - 1]] + 1); 最少方案
+    2. dp[i][j] = dp[i - 1][j] + dp[i][j - coins[i - 1]];         所有方案
+    3. dp[i][j] = max(dp[i - 1][j], dp[i][j - coins[i - 1]] + value[coins[i - 1]]) 最大价值
+- 要注意dp数组的初始化(和上面一一对应)
+    1. dp[i][0] = 0, dp[0][j] = 0x3f3f3f3f
+    2. dp[i][0] = 1, dp[0][j] = 0;
+    3. dp[i][0] = 0, dp[0][j] = 0
+
+## 编辑距离
+- Levenshtein距离,指两个字符串之间互相转换的最少修改次数,通常用于在信息检索和自然语言处理种度量两个序列的相似度
+- Q:输入两个字符串 $s$ 和 $t$ ,返回将 $s$ 转换为 $t$ 所需的最少编辑步数,三种操作,增删改
+    ```cpp
+    int LSA(string const& s, string const& t) {
+        int n = s.size(), m = t.size();
+        vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+        // 注意初始化dp
+        for (int i = 0; i <= n; ++i) 
+            dp[i][0] = i;
+        for (int j = 0; j <= m; ++j)
+            dp[0][j] = j;
+
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= m; ++j) {
+                if (s[i - 1] == s[j - 1]) dp[i][j] = dp[i - 1][j - 1];
+                else dp[i][j] = min({dp[i - 1][j - 1], dp[i][j - 1], dp[i - 1][j]}) + 1;
+            }
+        }
+        return dp[n][m];
+    }
+
+    ```
