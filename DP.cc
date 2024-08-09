@@ -165,6 +165,21 @@ int LSA(string const &s, string const &t) {
     return dp[n][m];
 }
 
+int Ktelin(int n) {
+    int res = 1;
+    int begin = n * 2;
+    long fenzi = 1;
+    long fenmu = 1;
+    for (int i = 0; i < n; ++i) {
+        fenzi *= begin--;
+    }
+    begin = n;
+    for (int i = 0; i < n; ++i) {
+        fenmu *= begin--;
+    }
+    return fenzi / (n + 1) / fenmu;
+}
+
 int main() {
     // int cur = 0;
 
@@ -176,9 +191,11 @@ int main() {
 
     // std::cout << charge2_(coins, 5);
 
-    string s = "bag";
-    string t = "pack";
-    std::cout << LSA(s, t);
+    // string s = "bag";
+    // string t = "pack";
+    // std::cout << LSA(s, t);
+
+    std::cout << Ktelin(3);
 
     return 0;
 }
