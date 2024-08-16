@@ -1,0 +1,133 @@
+{
+    "workbench.colorTheme": "Solarized Light",
+    "editor.fontFamily": "'Fira Code', Consolas, 'Courier New', monospace",
+    "editor.fontLigatures": true,
+    "remote.SSH.remotePlatform": {
+        "qc": "linux"
+    },
+    "editor.formatOnSave": true,
+    "files.autoSave": "afterDelay",
+    "[cpp]": {
+        "editor.defaultFormatter": "xaver.clang-format"
+    },
+    "C_Cpp.formatting": "clangFormat",
+    "files.autoGuessEncoding": true,
+    "editor.smoothScrolling": true,
+    "editor.cursorSmoothCaretAnimation": "on",
+    "workbench.list.smoothScrolling": true,
+    "terminal.integrated.smoothScrolling": true,
+    "editor.cursorBlinking": "smooth",
+    "editor.mouseWheelZoom": true,
+    "editor.wordWrap": "on",
+    "editor.acceptSuggestionOnEnter": "smart",
+    "editor.suggestSelection": "recentlyUsed",
+    "window.dialogStyle": "custom",
+    "debug.showBreakpointsInOverviewRuler": true,
+    "workbench.iconTheme": "symbols",
+    "symbols.hidesExplorerArrows": false,
+    "leetcode.nodePath": "/usr/local/lib/node/nodejs/bin/node",
+    "leetcode.defaultLanguage": "cpp",
+    "leetcode.endpoint": "leetcode-cn",
+    "leetcode.filePath": {
+    
+        "default": {
+            "folder": "",
+            "filename": "${id}.${kebab-case-name}.${ext}"
+        }
+    },
+    "cmake.showOptionsMovedNotification": false,
+    "editor.defaultFormatter": "xaver.clang-format",
+    "leetcode.useEndpointTranslation": true,
+    "leetcode.workspaceFolder": "/home/qc/LeetCode",
+    "C_Cpp.clang_format_fallbackStyle": "file",
+    "editor.renderWhitespace": "all",
+    "explorer.confirmDragAndDrop": false,
+    "aide.openaiKey": "sk-83d6a7bffb4646fe92c136b57d20b547",
+    "aide.openaiBaseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    "aide.openaiModel": "qwen-turbo",
+    "aide.aiPrompt": "Here is the code snippet: #{content} Please answer the following question:",
+    "aide.codeViewerHelperPrompt": "Provide detailed comments for the following #{sourceLanguage} code, using #{locale}: #{content}",
+    "aide.ignorePatterns": [
+
+        "**/node_modules",
+        "**/.git",
+        "**/__pycache__",
+        "**/.Python",
+        "**/.DS_Store",
+        "**/.cache",
+        "**/.next",
+        "**/.nuxt",
+        "**/.out",
+        "**/dist",
+        "**/.serverless",
+        "**/.parcel-cache"
+    ],
+
+    "leetcode.editor.shortcuts": [
+        "submit",
+        "test",
+        "solution",
+        "description"
+    ],
+    "markdown.preview.lineHeight": 2,
+    "markdown.preview.fontFamily": "'Fira Code'",
+    "leetcode.hint.configWebviewMarkdown": false,
+    "cmake.configureOnOpen": false,
+    "cmake.pinnedCommands": [
+        "workbench.action.tasks.configureTaskRunner",
+        "workbench.action.tasks.runTask"
+    ],
+    "hexeditor.columnWidth": 16,
+    "hexeditor.showDecodedText": true,
+    "hexeditor.defaultEndianness": "little",
+    "hexeditor.inspectorType": "aside",
+    "C_Cpp.default.cppStandard": "c++20",
+    "code-runner.runInTerminal": true,
+    "code-runner.languageIdToFileExtensionMap": {
+        "bat": ".bat",
+        "powershell": ".ps1",
+        "typescript": ".ts"
+    },
+    "code-runner.defaultLanguage": "cpp",
+    "code-runner.executorMapByFileExtension": {
+        ".vb": "cd $dir && vbc /nologo $fileName && $dir$fileNameWithoutExt",
+        ".vbs": "cscript //Nologo",
+        ".scala": "scala",
+        ".jl": "julia",
+        ".cr": "crystal",
+        ".ml": "ocaml",
+        ".zig": "zig run",
+        ".exs": "elixir",
+        ".hx": "haxe --cwd $dirWithoutTrailingSlash --run $fileNameWithoutExt",
+        ".rkt": "racket",
+        ".scm": "csi -script",
+        ".ahk": "autohotkey",
+        ".au3": "autoit3",
+        ".kt": "cd $dir && kotlinc $fileName -include-runtime -d $fileNameWithoutExt.jar && java -jar $fileNameWithoutExt.jar",
+        ".kts": "kotlinc -script",
+        ".dart": "dart",
+        ".pas": "cd $dir && fpc $fileName && $dir$fileNameWithoutExt",
+        ".pp": "cd $dir && fpc $fileName && $dir$fileNameWithoutExt",
+        ".d": "cd $dir && dmd $fileName && $dir$fileNameWithoutExt",
+        ".hs": "runhaskell",
+        ".nim": "nim compile --verbosity:0 --hints:off --run",
+        ".csproj": "dotnet run --project",
+        ".fsproj": "dotnet run --project",
+        ".lisp": "sbcl --script",
+        ".kit": "kitc --run",
+        ".v": "v run",
+        ".vsh": "v run",
+        ".sass": "sass --style expanded",
+        ".cu": "cd $dir && nvcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+        ".ring": "ring",
+        ".sml": "cd $dir && sml $fileName",
+        ".mojo": "mojo run",
+        ".erl": "escript",
+        ".spwn": "spwn build",
+        ".pkl": "cd $dir && pkl eval -f yaml $fileName -o $fileNameWithoutExt.yaml",
+        ".gleam": "gleam run -m $fileNameWithoutExt"
+    },
+    "terminal.integrated.enableMultiLinePasteWarning": false,
+    "emmet.preferences": {}
+
+}
