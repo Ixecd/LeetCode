@@ -16,16 +16,14 @@ private:
     int quickSelect(vector<int> &nums, int k) {
         int pivot = nums[rand() % nums.size()];
         vector<int> big, equal, small;
-        for (int num : nums) 
-            if (num > pivot) 
-                big.push_back(num);
-            else if (num == pivot) 
-                equal.push_back(num);
-            else small.push_back(num);
+        for (int num : nums) {
+            if (num > pivot) big.push_back(num);
+            else if (num < pivot) small.push_back(num);
+            else equal.push_back(num);
+        }
         if (big.size() >= k) return quickSelect(big, k);
-        if (nums.size() - small.size() < k) 
-            return quickSelect(small, k - nums.size() + small.size());
-        return pivot;
+        else if (k > nums.size() - small.size()) return quickSelect(small, k - nums.size() + small.size());
+        else return pivot;
     }
 };
 
