@@ -47,5 +47,7 @@
     "markdown.preview.fontFamily": "'Fira Code'",
     "leetcode.hint.configWebviewMarkdown": false
 ```
+# 使用Vscdoe连接Chat-GPT
 
 
+# 向VsCode原仓库提供一些插件
