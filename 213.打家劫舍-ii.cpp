@@ -9,21 +9,23 @@ using namespace std;
 // @lc code=start
 class Solution {
 public:
-    int rob(vector<int>& nums) {
+    int robHelper(vector<int> &nums, int left, int right) {
+        int pre = 0, cur = 0;
+        for (int i = left; i <= right; ++i) {
+            int tmp = max(pre + nums[i], cur);
+            pre = cur;
+            cur = tmp;
+        }
+        return cur;
+    }
+
+    int rob(vector<int> &nums) {
         int n = nums.size();
-        if (n == 1) {
-            return nums[0];
+        if (n < 2) {
+            return n ? nums[n] : 0;
         }
-        vector<vector<int>> dp(n + 1, vector<int>(2, 0));
-        dp[1][1] = nums[0];
-        dp[2][1] = max(nums[0], nums[1]);
-        dp[2][0] = nums[0];
-        for (int i = 3; i <= n; ++i) {
-            dp[i][0] = max(dp[i - 1][0], dp[i - 1][1]);
-            dp[i][1] = max(dp[i - 2][1], dp[i - 1][0]) + nums[i - 1];
-        }
-        return max(dp[n][1], dp[n][0]);
+        return max(robHelper(nums, 0, n - 2), robHelper(nums, 1, n - 1));
     }
 };
-// @lc code=end
 
+// @lc code=end
