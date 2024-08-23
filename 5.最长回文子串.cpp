@@ -24,7 +24,7 @@ public:
         for (int i = n; i >= 1; --i) {
             for (int j = i + 1; j <= n; ++j) {
                 if (s[i - 1] == s[j - 1]) {
-                    if (j - i == 1 || dp[i + 1][j - 1]) {
+                    if (j - i <= 2 || dp[i + 1][j - 1]) {
                         dp[i][j] = true;
                         if (ans.size() < j - i + 1) {
                             ans = s.substr(i - 1, j - i + 1);
