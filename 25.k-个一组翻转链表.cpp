@@ -15,26 +15,36 @@
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// struct ListNode {
+//    int val;
+//    ListNode *next;
+//    ListNode(int x) : val(x), next(nullptr) {}
+// };
+
 class Solution {
 public:
-    ListNode* reverseKGroup(ListNode* head, int k) {
-        ListNode* cursor = head;
+    ListNode *reverseKGroup(ListNode *head, int k) {
+        ListNode *cursor = head;
         for (int i = 0; i < k; ++i) {
-            if (cursor == nullptr) return head;
+            if (cursor == nullptr) {
+                return head;
+            }
             cursor = cursor->next;
         }
-        ListNode* curr = head;
-        ListNode* prev = nullptr;
-        ListNode* nxt = nullptr;
+        ListNode *cur = head, *pre = nullptr, *nxt = nullptr;
         for (int i = 0; i < k; ++i) {
-            nxt = curr->next;
-            curr->next = prev;
-            prev = curr;
-            curr = nxt;
+            nxt = cur->next;
+            cur->next = pre;
+            pre = cur;
+            cur = nxt;
         }
-        head->next = reverseKGroup(curr, k);
-        return prev;
+        head->next = reverseKGroup(cur, k);
+        return pre;
     }
 };
-// @lc code=end
 
+// @lc code=end

@@ -30,8 +30,7 @@ public:
     }
 
     vector<vector<int>> combinationSum(vector<int> &candidates, int target) {
-        int curSum = 0;
-        dfs(candidates, curSum, target, 0);
+        dfs(candidates, 0, target, 0);
         return ans;
     }
 };
