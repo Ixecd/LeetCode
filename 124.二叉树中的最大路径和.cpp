@@ -26,11 +26,10 @@ public:
         if (root == nullptr) {
             return 0;
         }
-        int leftBS = root->val + maxSum(root->left, ans);
-        int rightBS = root->val + maxSum(root->right, ans);
-        ans = max(
-            {ans, root->val, leftBS, rightBS, leftBS + rightBS - root->val});
-        return max({leftBS, rightBS, root->val});
+        int leftBS = maxSum(root->left, ans);
+        int rightBS = maxSum(root->right, ans);
+        ans = max({ans, leftBS + rightBS + root->val});
+        return max(max(leftBS, rightBS) + root->val, 0);
     }
 
     int maxPathSum(TreeNode *root) {
