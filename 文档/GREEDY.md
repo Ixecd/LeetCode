@@ -30,7 +30,7 @@
         while (low < high) {
             while (low < high && ary[high] >= pivot) --high;
             ary[low] = ary[high];
-            while (low < high && ary[low <= pivot]) ++low;
+            while (low < high && ary[low] <= pivot) ++low;
             ary[high] = ary[low];
         }
         ary[low] = pivot;
