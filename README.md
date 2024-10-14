@@ -48,6 +48,6 @@
     "leetcode.hint.configWebviewMarkdown": false
 ```
 # 使用Vscdoe连接Chat-GPT
-
+- GPT的API-key要米,所以改用国内的一款`fittencode`,直接在插件里面下载即可,非常好用
 
 # 向VsCode原仓库提供一些插件
